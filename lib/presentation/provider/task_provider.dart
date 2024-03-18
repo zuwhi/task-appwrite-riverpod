@@ -33,7 +33,7 @@ class TaskNotifier extends _$TaskNotifier {
     ref
         .read(taskCategoryNotifierProvider.notifier)
         .addTaskOnCategory(kategori, tasks);
-    await getListTask();
+    await getListBySelectCategory();
   }
 
   updateTask(Task task, kategori) async {
@@ -47,7 +47,7 @@ class TaskNotifier extends _$TaskNotifier {
       ref
           .read(taskCategoryNotifierProvider.notifier)
           .addTaskOnCategory(kategori, task.id!);
-      print('update');
+
       getListBySelectCategory();
     }
   }
@@ -64,13 +64,12 @@ class TaskNotifier extends _$TaskNotifier {
 
   getListBySelectCategory() async {
     state = const TaskState('loading', '', []);
-    print('load');
     final selectCategory = ref.watch(selectCategoryProvider);
     final selectDate = ref.watch(selectDateProvider);
-    // Logger().d(selectCategory);
-    Logger().d(selectDate);
-    final tasks =
-        await appwriteTask.listDocumentByCategory(selectCategory, selectDate);
+    Logger().d(selectCategory.category);
+    Logger().d(selectDate.date);
+    final tasks = await appwriteTask.listDocumentByCategory(
+        selectCategory.category, selectDate.date);
     // Logger().d(tasks);
     if (tasks == null) {
       state = const TaskState('failed', 'kosong', []);

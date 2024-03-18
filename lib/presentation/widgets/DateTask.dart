@@ -25,13 +25,15 @@ class _DateTaskState extends ConsumerState<DateTask> {
 
   DateTime? monthNow;
 
-  double _focusedIndex =
-      double.parse(DateFormat('d').format(DateTime.now())) - 1;
+  // double _focusedIndex =
+  //     double.parse(DateFormat('d').format(DateTime.now())) - 1;
 
+  double? _focusedIndex;
   @override
   void initState() {
     super.initState();
     populateDataList();
+    // Logger().d(_focusedIndex);
   }
 
   void populateDataList() {
@@ -47,6 +49,7 @@ class _DateTaskState extends ConsumerState<DateTask> {
   void _onItemFocus(int index, WidgetRef wiref) {
     setState(() {
       _focusedIndex = index as double;
+      ref.read(selectDateProvider.notifier).changeStateDateIndex(index);
 
       selectDate = DateFormat('yyyy-MM-dd')
           .format(DateTime(today.year, today.month, index + 1));
@@ -56,14 +59,17 @@ class _DateTaskState extends ConsumerState<DateTask> {
     // Logger().d(DateFormat('yyyy-MM-dd')
     //     .format(DateTime(today.year, today.month, index + 1))
     //     .toString());
-    ref.read(selectDateProvider.notifier).changeDate(DateFormat('yyyy-MM-dd')
-        .format(DateTime(today.year, today.month, index + 1))
-        .toString());
+    ref.read(selectDateProvider.notifier).changeStateDate(
+        DateFormat('yyyy-MM-dd')
+            .format(DateTime(today.year, today.month, index + 1))
+            .toString());
     ref.read(taskNotifierProvider.notifier).getListBySelectCategory();
   }
 
   @override
   Widget build(BuildContext context) {
+    final focusedIndex = ref.read(selectDateProvider);
+    _focusedIndex = (focusedIndex.selectIndex ?? -1) as double?;
     return SizedBox(
       height: 100,
       // color: Colors.amber,

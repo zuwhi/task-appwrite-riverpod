@@ -20,7 +20,7 @@ class _TaskPageState extends ConsumerState<TaskPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(taskNotifierProvider.notifier).getListBySelectCategory();
+      ref.watch(taskNotifierProvider.notifier).getListBySelectCategory();
       ref.read(taskCategoryNotifierProvider.notifier).getListCategory();
     });
     super.initState();
@@ -30,6 +30,7 @@ class _TaskPageState extends ConsumerState<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: Container(),
           title: Text(
             "Today's Task",
             style: GoogleFonts.lexendDeca(fontWeight: FontWeight.w600),

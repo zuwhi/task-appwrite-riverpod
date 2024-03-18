@@ -6,12 +6,12 @@ part of 'select_category.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$selectCategoryHash() => r'eea16829061deff83abb0b4dd4fc800778dd465f';
+String _$selectCategoryHash() => r'befb7fe7bfdf5db0489073695d7616b75811b4d7';
 
 /// See also [SelectCategory].
 @ProviderFor(SelectCategory)
 final selectCategoryProvider =
-    NotifierProvider<SelectCategory, String>.internal(
+    NotifierProvider<SelectCategory, SelectCategoryState>.internal(
   SelectCategory.new,
   name: r'selectCategoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -21,6 +21,6 @@ final selectCategoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$SelectCategory = Notifier<String>;
+typedef _$SelectCategory = Notifier<SelectCategoryState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

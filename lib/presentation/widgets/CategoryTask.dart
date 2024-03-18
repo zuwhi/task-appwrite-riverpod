@@ -15,7 +15,7 @@ class CategoryTask extends ConsumerStatefulWidget {
 }
 
 class _CategoryTaskState extends ConsumerState<CategoryTask> {
-  int _selected = -1;
+  int? _selected;
   String? categoryId;
 
   void _onSelect(index, catId) {
@@ -23,12 +23,15 @@ class _CategoryTaskState extends ConsumerState<CategoryTask> {
       _selected = index;
     });
 
-    ref.read(selectCategoryProvider.notifier).changeCategory(catId);
+    ref.read(selectCategoryProvider.notifier).changeStateCategoryIndex(index);
+    ref.read(selectCategoryProvider.notifier).changeStateCategory(catId);
     ref.read(taskNotifierProvider.notifier).getListBySelectCategory();
   }
 
   @override
   Widget build(BuildContext context) {
+    final selectCategory = ref.read(selectCategoryProvider);
+    _selected = selectCategory.selectIndex ?? -1;
     return SizedBox(
       height: 40,
       child: Consumer(
