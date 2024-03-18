@@ -20,7 +20,7 @@ class _TaskPageState extends ConsumerState<TaskPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(taskNotifierProvider.notifier).getListTask();
+      ref.read(taskNotifierProvider.notifier).getListBySelectCategory();
       ref.read(taskCategoryNotifierProvider.notifier).getListCategory();
     });
     super.initState();
@@ -70,7 +70,6 @@ class _TaskPageState extends ConsumerState<TaskPage> {
                       );
                     }
                     if (state.status == 'success') {
-                      // Logger().d(state.data);
                       List<Task> tasks = state.data;
                       return ListView.builder(
                         itemCount: tasks.length,

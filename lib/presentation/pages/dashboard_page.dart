@@ -1,3 +1,4 @@
+import 'package:appwrite_todo/presentation/provider/select_category.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
 import 'package:appwrite_todo/presentation/provider/task_provider.dart';
 import 'package:appwrite_todo/presentation/widgets/avatar_widget.dart';
@@ -5,7 +6,6 @@ import 'package:appwrite_todo/presentation/widgets/in_progress_widget.dart';
 import 'package:appwrite_todo/presentation/widgets/progress_widget.dart';
 import 'package:appwrite_todo/presentation/widgets/task_groups.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_lint/riverpod_lint.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends ConsumerStatefulWidget {
@@ -27,6 +27,8 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
+    final selectCategory = ref.read(selectCategoryProvider);
+    print(selectCategory);
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(

@@ -1,6 +1,9 @@
 import 'package:appwrite_todo/data/appwrite/appwrite_task.dart';
 import 'package:appwrite_todo/data/model/Task.dart';
+import 'package:appwrite_todo/presentation/provider/select_category.dart';
+import 'package:appwrite_todo/presentation/provider/select_date.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:equatable/equatable.dart';
@@ -35,16 +38,17 @@ class TaskNotifier extends _$TaskNotifier {
 
   updateTask(Task task, kategori) async {
     final tasks = await appwriteTask.updateDocument(task);
-    // Logger().d(task.id);
     if (tasks == null) {
       ref
           .read(taskCategoryNotifierProvider.notifier)
           .addTaskOnCategory(kategori, task.id!);
+      await getListBySelectCategory();
     } else {
       ref
           .read(taskCategoryNotifierProvider.notifier)
           .addTaskOnCategory(kategori, task.id!);
-      await getListTask();
+      print('update');
+      getListBySelectCategory();
     }
   }
 
@@ -54,13 +58,20 @@ class TaskNotifier extends _$TaskNotifier {
     if (tasks == null) {
       state = const TaskState('failed', 'kosong', []);
     } else {
-      state = TaskState('success', '', tasks ?? []);
+      getListBySelectCategory();
     }
   }
 
-  getListTaskByCategory(String category) async {
+  getListBySelectCategory() async {
     state = const TaskState('loading', '', []);
-    final tasks = await appwriteTask.listDocumentByCategory(category);
+    print('load');
+    final selectCategory = ref.watch(selectCategoryProvider);
+    final selectDate = ref.watch(selectDateProvider);
+    // Logger().d(selectCategory);
+    Logger().d(selectDate);
+    final tasks =
+        await appwriteTask.listDocumentByCategory(selectCategory, selectDate);
+    // Logger().d(tasks);
     if (tasks == null) {
       state = const TaskState('failed', 'kosong', []);
     } else {
@@ -83,3 +94,14 @@ class TaskState extends Equatable {
   // Task: implement props
   List<Object> get props => [status, message, data];
 }
+
+
+ // getListTaskByCategory(String category) async {
+  //   state = const TaskState('loading', '', []);
+  //   final tasks = await appwriteTask.listDocumentByCategory(category);
+  //   if (tasks == null) {
+  //     state = const TaskState('failed', 'kosong', []);
+  //   } else {
+  //     state = TaskState('success', '', tasks);
+  //   }
+  // }

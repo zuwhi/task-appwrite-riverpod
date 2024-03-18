@@ -1,4 +1,5 @@
 import 'package:appwrite_todo/data/static/data_static.dart';
+import 'package:appwrite_todo/presentation/provider/select_category.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
 import 'package:appwrite_todo/presentation/provider/task_provider.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +20,11 @@ class _CategoryTaskState extends ConsumerState<CategoryTask> {
 
   void _onSelect(index, catId) {
     setState(() {
-      categoryId = catId;
       _selected = index;
     });
 
-    ref
-        .read(taskNotifierProvider.notifier)
-        .getListTaskByCategory(categoryId ?? '');
+    ref.read(selectCategoryProvider.notifier).changeCategory(catId);
+    ref.read(taskNotifierProvider.notifier).getListBySelectCategory();
   }
 
   @override
@@ -35,6 +34,8 @@ class _CategoryTaskState extends ConsumerState<CategoryTask> {
       child: Consumer(
         builder: (context, ref, child) {
           TaskCategoryGroups state = ref.watch(taskCategoryNotifierProvider);
+          ref.read(taskCategoryNotifierProvider.notifier).getListNameCategory();
+
           if (state.status == '') return const SizedBox.shrink();
           if (state.status == 'loading') {
             return const Center(

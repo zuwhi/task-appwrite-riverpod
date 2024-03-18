@@ -1,5 +1,6 @@
 import 'package:appwrite_todo/data/model/Category.dart';
 import 'package:appwrite_todo/data/model/Task.dart';
+import 'package:appwrite_todo/main.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
 import 'package:intl/intl.dart';
 import 'package:appwrite_todo/presentation/pages/task_pages.dart';
@@ -52,7 +53,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
     final isEdit = widget.isEdit;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Task"),
+        title: Text((isEdit == true) ? "Edit Task" : "Add Task"),
+        centerTitle: true,
         actions: const [],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -87,14 +89,12 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                     .read(taskNotifierProvider.notifier)
                     .addTask(task, context, kategori);
 
-                // ref
-                //     .read(taskCategoryNotifierProvider.notifier)
-                //     .addTaskOnCategory(kategori, task);
               }
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const TaskPage(),
+                    builder: (context) =>
+                        Home(pageParams: const TaskPage(), tabParams: 2),
                   ));
             },
             child: Text(

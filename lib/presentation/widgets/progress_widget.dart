@@ -1,24 +1,27 @@
+import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ProgressWidget extends StatelessWidget {
+class ProgressWidget extends ConsumerWidget {
   const ProgressWidget({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       height: 165,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Color(0xFF5F33E1),
+        color: const Color(0xFF5F33E1),
         borderRadius: BorderRadius.circular(30),
       ),
       child: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           // mainAxisAlignment: MainAxisAlignment.start,
@@ -27,11 +30,11 @@ class ProgressWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
                     // color: Colors.amber,
                     width: 150,
                     child: Text(
-                      'Your Today`s Task almost done',
+                      'Your Total Task Percentage',
                       style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
@@ -49,7 +52,7 @@ class ProgressWidget extends StatelessWidget {
                       style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF5F33E1)),
+                          color: const Color(0xFF5F33E1)),
                     ))
               ],
             ),
@@ -62,21 +65,51 @@ class ProgressWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Center(
-                    child: CircularPercentIndicator(
-                      radius: 43.0,
-                      lineWidth: 8.0,
-                      animation: true,
-                      percent: 0.7,
-                      center: const Text(
-                        "70%",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17.0,
-                            color: Colors.white),
-                      ),
-                      circularStrokeCap: CircularStrokeCap.round,
-                      progressColor: Colors.white,
-                      backgroundColor: Colors.white.withOpacity(0.3),
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        TaskCategoryGroups state =
+                            ref.watch(taskCategoryNotifierProvider);
+                        if (state.status == '') return const SizedBox.shrink();
+                        if (state.status == 'loading') {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (state.status == 'failed') {
+                          return Center(
+                            child: Text(state.message),
+                          );
+                        }
+                        if (state.status == 'success') {
+                          List data = state.data;
+                          num doneTotal = 0;
+                          num totalLength = 0;
+                          for (int i = 0; i < data.length; i++) {
+                            doneTotal += data[i].doneTotal;
+                            totalLength += data[i].tasks.length;
+                          }
+
+                          num percent = doneTotal / totalLength * 100;
+
+                          return CircularPercentIndicator(
+                            radius: 43.0,
+                            lineWidth: 8.0,
+                            animation: true,
+                            percent: percent * 0.01,
+                            center: Text(
+                              "${percent.toStringAsFixed(0)}%",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 17.0,
+                                  color: Colors.white),
+                            ),
+                            circularStrokeCap: CircularStrokeCap.round,
+                            progressColor: Colors.white,
+                            backgroundColor: Colors.white.withOpacity(0.3),
+                          );
+                        }
+                        return Container();
+                      },
                     ),
                   ),
                   Container(

@@ -22,22 +22,33 @@ class MyApp extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  final pageParams;
+  final tabParams;
+  const Home({Key? key, this.pageParams, this.tabParams}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  Widget? currentPage;
+  int? currentTab;
+  @override
+  void initState() {
+    if (widget.pageParams != null) {
+      currentPage = widget.pageParams;
+      currentTab = widget.tabParams;
+    }
+    super.initState();
+  }
+
   // DatabaseInstance databaseInstance = DatabaseInstance();
-  Widget currentPage = const DashboardPage();
-  int currentTab = 1;
+
   Color custPurple = const Color(0xFF5F33E1);
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
-      body: currentPage,
+      body: currentPage ?? const DashboardPage(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xFF5F33E1),
         tooltip: 'Increment',

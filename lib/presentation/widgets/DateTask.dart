@@ -1,41 +1,103 @@
 import 'dart:math';
-
+import 'package:appwrite_todo/presentation/provider/select_date.dart';
+import 'package:appwrite_todo/presentation/provider/task_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:scroll_snap_list/scroll_snap_list.dart';
 
-class DateTask extends StatefulWidget {
-  const DateTask({
-    super.key,
-  });
+class DateTask extends ConsumerStatefulWidget {
+  const DateTask({super.key});
 
   @override
-  State<DateTask> createState() => _DateTaskState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _DateTaskState();
 }
 
-class _DateTaskState extends State<DateTask> {
-  @override
+class _DateTaskState extends ConsumerState<DateTask> {
   List<int> data = [];
+  String nowDate = '0';
+  DateTime? monthEnd;
+  int? dayLength;
+  DateTime today = DateTime.now();
+  String? selectDate;
 
-  void populateDataList() {
-    for (int i = 1; i <= 29; i++) {
-      data.add(i);
-    }
-  }
+  DateTime? monthNow;
 
-  int _focusedIndex = 2;
+  double _focusedIndex =
+      double.parse(DateFormat('d').format(DateTime.now())) - 1;
+
   @override
   void initState() {
     super.initState();
     populateDataList();
   }
 
-  void _onItemFocus(int index) {
+  void populateDataList() {
+    monthNow = DateTime(today.year, today.month, 0);
+    monthEnd = DateTime(today.year, today.month + 1, 0);
+    dayLength = monthEnd!.day;
+
+    for (int i = 1; i <= dayLength!; i++) {
+      data.add(i);
+    }
+  }
+
+  void _onItemFocus(int index, WidgetRef wiref) {
     setState(() {
-      _focusedIndex = index;
+      _focusedIndex = index as double;
+
+      selectDate = DateFormat('yyyy-MM-dd')
+          .format(DateTime(today.year, today.month, index + 1));
+      selectDate!.substring(0, 10);
     });
+
+    // Logger().d(DateFormat('yyyy-MM-dd')
+    //     .format(DateTime(today.year, today.month, index + 1))
+    //     .toString());
+    ref.read(selectDateProvider.notifier).changeDate(DateFormat('yyyy-MM-dd')
+        .format(DateTime(today.year, today.month, index + 1))
+        .toString());
+    ref.read(taskNotifierProvider.notifier).getListBySelectCategory();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 100,
+      // color: Colors.amber,
+      child: Column(
+        // crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ScrollSnapList(
+              initialIndex: _focusedIndex,
+              itemSize: 75,
+              itemBuilder: _buildListItem,
+              dynamicItemSize: true,
+              focusOnItemTap: true,
+              selectedItemAnchor: SelectedItemAnchor.MIDDLE,
+              itemCount: data.length,
+              // focusToItem: (p0) => _focusedIndex,
+              onReachEnd: () {
+                print('done');
+              },
+              onItemFocus: (p0) {
+                _onItemFocus(p0, ref);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildListItem(BuildContext context, int index) {
+    final currentDate = monthNow!.add(Duration(days: index + 1));
+    var bulan = DateFormat('MMMM').format(DateTime(0, today.month));
+    var hari = DateFormat('EEEE').format(currentDate);
+
     if (index == data.length) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -69,7 +131,7 @@ class _DateTaskState extends State<DateTask> {
                   height: 5.0,
                 ),
                 Text(
-                  "Maret",
+                  bulan,
                   style: TextStyle(
                       fontSize: 15.0,
                       color: isFocused ? Colors.white : Colors.black),
@@ -82,9 +144,9 @@ class _DateTaskState extends State<DateTask> {
                       color: isFocused ? Colors.white : Colors.black),
                 ),
                 Text(
-                  "senin",
+                  hari,
                   style: TextStyle(
-                      fontSize: 15.0,
+                      fontSize: 12.0,
                       color: isFocused ? Colors.white : Colors.black),
                 ),
                 const SizedBox(
@@ -95,67 +157,6 @@ class _DateTaskState extends State<DateTask> {
           )
         ],
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 100,
-      // color: Colors.amber,
-      child: Column(
-        // crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ScrollSnapList(
-              // onItemFocus: _onItemFocus,
-
-              itemSize: 75,
-              itemBuilder: _buildListItem,
-              dynamicItemSize: true,
-              // updateOnScroll: true,
-              focusOnItemTap: true,
-              selectedItemAnchor: SelectedItemAnchor.MIDDLE,
-              itemCount: data.length,
-
-              onReachEnd: () {
-                print('done');
-              },
-              onItemFocus: _onItemFocus,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ListView.builder(
-//           scrollDirection: Axis.horizontal,
-//           itemCount: 10,
-//           itemBuilder: (context, index) {
-//             return Padding(
-//               padding: const EdgeInsets.all(8.0),
-//               child: InkWell(
-//                 child: DateCard(),
-//               ),
-//             );
-//           }),
-
-class DateCard extends StatelessWidget {
-  const DateCard({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.blue,
-      ),
-      width: 50,
-      child: const Text('data'),
     );
   }
 }

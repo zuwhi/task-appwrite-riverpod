@@ -74,6 +74,8 @@ class Category {
     tasks = json['tasks'];
   }
 
+  
+
   @override
   String toString() {
     return 'Category(id: $id, name: $name, total: $total, doneTotal: $doneTotal, tasks: $tasks)';

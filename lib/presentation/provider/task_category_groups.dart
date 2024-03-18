@@ -13,13 +13,18 @@ class TaskCategoryNotifier extends _$TaskCategoryNotifier {
   final appwriteCategory = AppwriteCategoryRepository();
 
   getListCategory() async {
-    state = TaskCategoryGroups(status: 'loading', message: '', data: []);
+    // state = TaskCategoryGroups(status: 'loading', message: '', data: []);
     final data = await appwriteCategory.listCategory();
     if (data == null) {
       state = TaskCategoryGroups(status: 'failed', message: '', data: []);
     } else {
       state = TaskCategoryGroups(status: 'success', message: '', data: data);
     }
+  }
+
+  Future<List<String>?> getListNameCategory() async {
+    final data = await appwriteCategory.listNameCategory();
+    return data;
   }
 
   getCategoryById(String id) async {

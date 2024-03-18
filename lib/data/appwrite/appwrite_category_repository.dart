@@ -28,6 +28,20 @@ class AppwriteCategoryRepository {
     }
   }
 
+  Future<List<String>?> listNameCategory() async {
+    try {
+      final response = await databases.listDocuments(
+          databaseId: Appconstants.dbID,
+          collectionId: Appconstants.collectionCategoryID);
+
+
+      // return listData;
+    } catch (e) {
+      rethrow;
+    }
+    return null;
+  }
+
   createDocument(Category category, context) async {
     try {
       final response = await databases.createDocument(

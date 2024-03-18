@@ -5,6 +5,8 @@ import 'package:appwrite/models.dart';
 import 'package:appwrite_todo/constants/app_constants.dart';
 import 'package:appwrite_todo/data/helper/network_client_helper.dart';
 import 'package:appwrite_todo/data/model/Task.dart';
+import 'package:appwrite_todo/presentation/provider/select_category.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:logger/logger.dart';
 
@@ -32,19 +34,25 @@ class AppwriteTaskRepository {
     }
   }
 
-  Future<List<Task>?> listDocumentByCategory(String category) async {
+  Future<List<Task>?> listDocumentByCategory(
+      String category, String date) async {
     try {
       DocumentList? response;
       if (category == 'all') {
         response = await databases.listDocuments(
-            databaseId: Appconstants.dbID,
-            collectionId: Appconstants.collectionID);
+          databaseId: Appconstants.dbID,
+          collectionId: Appconstants.collectionID,
+          queries: [
+            Query.equal('date', date),
+          ],
+        );
       } else {
         response = await databases.listDocuments(
           databaseId: Appconstants.dbID,
           collectionId: Appconstants.collectionID,
           queries: [
             Query.equal('category', category),
+            Query.equal('date', date),
           ],
         );
       }
@@ -93,9 +101,8 @@ class AppwriteTaskRepository {
             'category': task.category,
             'isDone': task.isDone
           });
-      // if (response.data.isNotEmpty) {
-      //   return await listDocument();
-      // }
+
+      return 'success';
     } on AppwriteException catch (e) {
       print(e);
     }
@@ -108,27 +115,13 @@ class AppwriteTaskRepository {
           collectionId: Appconstants.collectionID,
           documentId: documentID);
 
-      return await listDocument();
+      return 'success';
     } catch (e) {
       rethrow;
     }
   }
 
-  // getCategoryById(String id) async {
-  //   try {
-  //     final response = await databases.listDocuments(
-  //         databaseId: Appconstants.dbID,
-  //         collectionId: Appconstants.collectionID,
-  //         queries: [Query.equal('category', id)]);
-  //     List<Task> listData =
-  //         response.documents.map((e) => Task.fromJson(e.data)).toList();
 
-  //     return listData;
-  //   } on AppwriteException catch (e) {
-  //     logger.d(e);
-  //   }
-  //   return null;
-  // }
 
   @override
   List<Task> build() => <Task>[];
