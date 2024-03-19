@@ -1,10 +1,10 @@
 import 'package:appwrite_todo/presentation/provider/select_category.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
 import 'package:appwrite_todo/presentation/provider/task_provider.dart';
-import 'package:appwrite_todo/presentation/widgets/avatar_widget.dart';
-import 'package:appwrite_todo/presentation/widgets/in_progress_widget.dart';
-import 'package:appwrite_todo/presentation/widgets/progress_widget.dart';
-import 'package:appwrite_todo/presentation/widgets/task_groups.dart';
+import 'package:appwrite_todo/presentation/pages/dashboard/widgets/avatar_widget.dart';
+import 'package:appwrite_todo/presentation/pages/dashboard/widgets/in_progress_widget.dart';
+import 'package:appwrite_todo/presentation/pages/dashboard/widgets/progress_widget.dart';
+import 'package:appwrite_todo/presentation/pages/dashboard/widgets/task_groups.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +19,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(taskNotifierProvider.notifier).getListTask();
+      ref.read(taskNotifierProvider.notifier).getListTaskDesc();
       ref.read(taskCategoryNotifierProvider.notifier).getListCategory();
     });
     super.initState();
@@ -27,8 +27,6 @@ class _DashboardPageState extends ConsumerState<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final selectCategory = ref.read(selectCategoryProvider);
-    print(selectCategory);
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(

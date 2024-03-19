@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:appwrite_todo/data/model/Task.dart';
+import 'package:appwrite_todo/presentation/pages/detail_task/add_task.dart';
 import 'package:appwrite_todo/presentation/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -68,6 +71,17 @@ class _InProgressState extends ConsumerState<InProgress> {
                       return Padding(
                           padding: const EdgeInsets.only(right: 17),
                           child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddTaskPage(
+                                            isByDate: false,
+                                            isEdit: true,
+                                            task: dataTask[index],
+                                          )),
+                                );
+                              },
                               child: BoxProgress(
                                   colors: colors,
                                   index: index,
@@ -102,7 +116,9 @@ class BoxProgress extends StatelessWidget {
         // height: 150,
         width: 210,
         decoration: BoxDecoration(
-          color: _colors[index],
+          color: (index >= 7)
+              ? _colors[Random().nextInt(7) + 1].withOpacity(0.5)
+              : _colors[index],
           borderRadius: BorderRadius.circular(20),
         ),
         child: Column(
@@ -128,7 +144,9 @@ class BoxProgress extends StatelessWidget {
                   ),
                   child: Icon(
                     Icons.work,
-                    color: _colors[index],
+                    color: (index >= 7)
+                        ? _colors[Random().nextInt(7) + 1]
+                        : _colors[index],
                     size: 16,
                   ),
                 )
@@ -160,7 +178,9 @@ class BoxProgress extends StatelessWidget {
                     animationDuration: 2500,
                     percent: 0.8,
                     barRadius: const Radius.circular(16),
-                    progressColor: _colors[index].withOpacity(1),
+                    progressColor: (index >= 7)
+                        ? _colors[Random().nextInt(7) + 1]
+                        : _colors[index],
                     backgroundColor: Colors.white.withOpacity(0.3),
                   )),
             )

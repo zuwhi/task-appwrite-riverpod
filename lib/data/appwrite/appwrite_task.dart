@@ -34,6 +34,21 @@ class AppwriteTaskRepository {
     }
   }
 
+  Future<List<Task>?> listDocumentDesc() async {
+    try {
+      final response = await databases.listDocuments(
+          databaseId: Appconstants.dbID,
+          collectionId: Appconstants.collectionID,
+          queries: [Query.orderDesc("\$createdAt"), Query.limit(6)]);
+      // logger.d(response.documents);
+      List<Task> listData =
+          response.documents.map((e) => Task.fromJson(e.data)).toList();
+      return listData;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<List<Task>?> listDocumentByCategory(
       String category, String date) async {
     try {
@@ -120,8 +135,6 @@ class AppwriteTaskRepository {
       rethrow;
     }
   }
-
-
 
   @override
   List<Task> build() => <Task>[];

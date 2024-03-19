@@ -1,9 +1,10 @@
 import 'package:appwrite_todo/data/model/Category.dart';
 import 'package:appwrite_todo/data/model/Task.dart';
 import 'package:appwrite_todo/main.dart';
+import 'package:appwrite_todo/presentation/pages/list_task/list_task.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
 import 'package:intl/intl.dart';
-import 'package:appwrite_todo/presentation/pages/task_pages.dart';
+import 'package:appwrite_todo/presentation/pages/task_date/task_pages.dart';
 import 'package:appwrite_todo/presentation/provider/task_provider.dart';
 import 'package:appwrite_todo/presentation/widgets/appColor.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,8 @@ import 'package:logger/logger.dart';
 class AddTaskPage extends ConsumerStatefulWidget {
   final isEdit;
   final task;
-  const AddTaskPage({super.key, this.isEdit, this.task});
+  final bool? isByDate;
+  const AddTaskPage({super.key, this.isEdit, this.task, this.isByDate = true});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _AddTaskPageState();
@@ -76,9 +78,14 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                     category: kategori ?? initCategory,
                     date: dateInput.text,
                     isDone: isDone);
-                ref
-                    .read(taskNotifierProvider.notifier)
-                    .updateTask(taskEdit, kategori);
+
+                widget.isByDate!
+                    ? ref
+                        .read(taskNotifierProvider.notifier)
+                        .updateTask(taskEdit, kategori, true)
+                    : ref
+                        .read(taskNotifierProvider.notifier)
+                        .updateTask(taskEdit, kategori, false);
               } else {
                 final task = Task(
                     title: titleEdt.text,
@@ -88,14 +95,23 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                 ref
                     .read(taskNotifierProvider.notifier)
                     .addTask(task, context, kategori);
-
               }
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        Home(pageParams: const TaskPage(), tabParams: 2),
-                  ));
+
+              widget.isByDate!
+                  ? Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            const Home(pageParams: TaskPage(), tabParams: 2),
+                      ),
+                      (route) => false)
+                  : Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Home(
+                            pageParams: ListTaskPage(), tabParams: 3),
+                      ),
+                      (route) => false);
             },
             child: Text(
               (isEdit == true) ? "Edit Task" : "Save Task",

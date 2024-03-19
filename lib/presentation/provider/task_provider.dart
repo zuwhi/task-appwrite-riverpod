@@ -26,6 +26,16 @@ class TaskNotifier extends _$TaskNotifier {
     }
   }
 
+  getListTaskDesc() async {
+    state = const TaskState('loading', '', []);
+    final tasks = await appwriteTask.listDocumentDesc();
+    if (tasks == null) {
+      state = const TaskState('failed', 'kosong', []);
+    } else {
+      state = TaskState('success', '', tasks);
+    }
+  }
+
   addTask(Task task, context, kategori) async {
     state = const TaskState('loading', '', []);
     String tasks = await appwriteTask.createDocument(task, context);
@@ -36,7 +46,7 @@ class TaskNotifier extends _$TaskNotifier {
     await getListBySelectCategory();
   }
 
-  updateTask(Task task, kategori) async {
+  updateTask(Task task, kategori, isByDate) async {
     final tasks = await appwriteTask.updateDocument(task);
     if (tasks == null) {
       ref
@@ -47,18 +57,17 @@ class TaskNotifier extends _$TaskNotifier {
       ref
           .read(taskCategoryNotifierProvider.notifier)
           .addTaskOnCategory(kategori, task.id!);
-
-      getListBySelectCategory();
+      isByDate ? getListBySelectCategory() : getListTaskDesc();
     }
   }
 
-  removeTask(String id) async {
+  removeTask(String id, bool isByListAll) async {
     state = const TaskState('loading', '', []);
     final tasks = await appwriteTask.removeReminder(id);
     if (tasks == null) {
       state = const TaskState('failed', 'kosong', []);
     } else {
-      getListBySelectCategory();
+      isByListAll ? getListTaskDesc() : getListBySelectCategory();
     }
   }
 

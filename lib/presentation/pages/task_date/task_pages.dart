@@ -1,9 +1,9 @@
 import 'package:appwrite_todo/data/model/Task.dart';
-import 'package:appwrite_todo/presentation/pages/add_task.dart';
+import 'package:appwrite_todo/presentation/pages/detail_task/add_task.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
 import 'package:appwrite_todo/presentation/provider/task_provider.dart';
-import 'package:appwrite_todo/presentation/widgets/CategoryTask.dart';
-import 'package:appwrite_todo/presentation/widgets/DateTask.dart';
+import 'package:appwrite_todo/presentation/pages/task_date/widget/CategoryTask.dart';
+import 'package:appwrite_todo/presentation/pages/task_date/widget/DateTask.dart';
 import 'package:appwrite_todo/presentation/widgets/appColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -115,7 +115,7 @@ class _TaskPageState extends ConsumerState<TaskPage> {
                                     onPressed: () {
                                       ref
                                           .read(taskNotifierProvider.notifier)
-                                          .removeTask(tasks[index].id!);
+                                          .removeTask(tasks[index].id!, false);
                                     },
                                     icon: const Icon(
                                       Icons.delete,

@@ -1,3 +1,4 @@
+import 'package:appwrite_todo/presentation/pages/detail_task/add_task.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,9 +47,15 @@ class ProgressWidget extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AddTaskPage()),
+                      );
+                    },
                     child: Text(
-                      'View Task',
+                      'Add Task',
                       style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,

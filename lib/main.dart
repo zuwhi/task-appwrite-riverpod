@@ -1,7 +1,8 @@
-import 'package:appwrite_todo/presentation/pages/add_task.dart';
-import 'package:appwrite_todo/presentation/pages/dashboard_page.dart';
-import 'package:appwrite_todo/presentation/pages/list_todo_page.dart';
-import 'package:appwrite_todo/presentation/pages/task_pages.dart';
+import 'package:appwrite_todo/presentation/pages/detail_task/add_task.dart';
+import 'package:appwrite_todo/presentation/pages/dashboard/dashboard_page.dart';
+import 'package:appwrite_todo/presentation/pages/list_task/list_task.dart';
+import 'package:appwrite_todo/presentation/pages/profil/profil_page.dart';
+import 'package:appwrite_todo/presentation/pages/task_date/task_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -112,13 +113,13 @@ class _HomeState extends State<Home> {
                     elevation: 500,
                     onPressed: () {
                       setState(() {
-                        currentPage = const DashboardPage();
-                        currentTab = 1;
+                        currentPage = const ListTaskPage();
+                        currentTab = 3;
                       });
                     },
                     child: Icon(
-                      Icons.home_filled,
-                      color: currentTab == 1 ? Colors.deepPurple : Colors.grey,
+                      Icons.list,
+                      color: currentTab == 3 ? Colors.deepPurple : Colors.grey,
                     ),
                   ),
                   MaterialButton(
@@ -126,13 +127,13 @@ class _HomeState extends State<Home> {
                     elevation: 10,
                     onPressed: () {
                       setState(() {
-                        currentPage = const DashboardPage();
-                        currentTab = 2;
+                        currentPage = const ProfilPage();
+                        currentTab = 4;
                       });
                     },
                     child: Icon(
-                      Icons.home_filled,
-                      color: currentTab == 2 ? Colors.deepPurple : Colors.grey,
+                      Icons.person,
+                      color: currentTab == 4 ? Colors.deepPurple : Colors.grey,
                     ),
                   ),
                 ]),
