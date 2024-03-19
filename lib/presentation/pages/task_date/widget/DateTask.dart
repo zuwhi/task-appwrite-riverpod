@@ -28,7 +28,7 @@ class _DateTaskState extends ConsumerState<DateTask> {
   // double _focusedIndex =
   //     double.parse(DateFormat('d').format(DateTime.now())) - 1;
 
-  double? _focusedIndex;
+  int? _focusedIndex;
   @override
   void initState() {
     super.initState();
@@ -48,7 +48,7 @@ class _DateTaskState extends ConsumerState<DateTask> {
 
   void _onItemFocus(int index, WidgetRef wiref) {
     setState(() {
-      _focusedIndex = index as double;
+      _focusedIndex = index;
       ref.read(selectDateProvider.notifier).changeStateDateIndex(index);
 
       selectDate = DateFormat('yyyy-MM-dd')
@@ -69,7 +69,7 @@ class _DateTaskState extends ConsumerState<DateTask> {
   @override
   Widget build(BuildContext context) {
     final focusedIndex = ref.read(selectDateProvider);
-    _focusedIndex = (focusedIndex.selectIndex ?? -1) as double?;
+    _focusedIndex = (focusedIndex.selectIndex ?? -1);
     return SizedBox(
       height: 100,
       // color: Colors.amber,
@@ -78,7 +78,7 @@ class _DateTaskState extends ConsumerState<DateTask> {
         children: [
           Expanded(
             child: ScrollSnapList(
-              initialIndex: _focusedIndex,
+              initialIndex: _focusedIndex!.toDouble(),
               itemSize: 75,
               itemBuilder: _buildListItem,
               dynamicItemSize: true,

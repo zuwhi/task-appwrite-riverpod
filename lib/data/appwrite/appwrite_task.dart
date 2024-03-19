@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:appwrite_todo/constants/app_constants.dart';

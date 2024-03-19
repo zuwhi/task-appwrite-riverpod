@@ -21,16 +21,15 @@ class TaskGroups extends ConsumerWidget {
       Colors.pink.withOpacity(0.2),
       Colors.orange.withOpacity(0.2),
     ];
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    return Stack(children: [
       Text(
         'Task Groups',
         style:
             GoogleFonts.lexendDeca(fontSize: 26, fontWeight: FontWeight.w500),
       ),
-      const SizedBox(
-        height: 10.0,
-      ),
       Container(
+        // padding: const EdgeInsets.only(top: 0),
+        margin: const EdgeInsets.only(top: 15),
         child: Consumer(
           builder: (context, ref, child) {
             TaskCategoryGroups state = ref.watch(taskCategoryNotifierProvider);
@@ -49,7 +48,7 @@ class TaskGroups extends ConsumerWidget {
               List data = state.data;
 
               return ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
+                // physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: data.length,
                 itemBuilder: (context, index) {
