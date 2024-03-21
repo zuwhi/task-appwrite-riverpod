@@ -7,6 +7,7 @@ class Task {
   String? date;
   dynamic category;
   bool? isDone;
+  dynamic image;
   Task({
     this.id,
     this.title,
@@ -14,16 +15,17 @@ class Task {
     this.date,
     required this.category,
     this.isDone,
+    this.image,
   });
-
 
   Task copyWith({
     String? id,
     String? title,
     String? desc,
     String? date,
-    dynamic? category,
+    dynamic category,
     bool? isDone,
+    dynamic image,
   }) {
     return Task(
       id: id ?? this.id,
@@ -32,6 +34,7 @@ class Task {
       date: date ?? this.date,
       category: category ?? this.category,
       isDone: isDone ?? this.isDone,
+      image: image ?? this.image,
     );
   }
 
@@ -43,6 +46,7 @@ class Task {
       'date': date,
       'category': category,
       'isDone': isDone,
+      'image': image,
     };
   }
 
@@ -54,50 +58,61 @@ class Task {
       date: map['date'] != null ? map['date'] as String : null,
       category: map['category'] as dynamic,
       isDone: map['isDone'] != null ? map['isDone'] as bool : null,
+      image: map['image'] as dynamic,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   // factory Task.fromJson(String source) => Task.fromMap(json.decode(source) as Map<String, dynamic>);
-    Task.fromJson(Map<String, dynamic> json) {
+  Task.fromJson(Map<String, dynamic> json) {
     id = json['\$id'];
     title = json['title'];
     desc = json['desc'];
     date = json['date'];
     category = json['category'];
     isDone = json['isDone'];
+    image = json['image'];
   }
-
   @override
   String toString() {
-    return 'Task(id: $id, title: $title, desc: $desc, date: $date, category: $category, isDone: $isDone)';
+    return 'Task(id: $id, title: $title, desc: $desc, date: $date, category: $category, isDone: $isDone, image: $image)';
   }
 
   @override
   bool operator ==(covariant Task other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.title == title &&
-      other.desc == desc &&
-      other.date == date &&
-      other.category == category &&
-      other.isDone == isDone;
+
+    return other.id == id &&
+        other.title == title &&
+        other.desc == desc &&
+        other.date == date &&
+        other.category == category &&
+        other.isDone == isDone &&
+        other.image == image;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      title.hashCode ^
-      desc.hashCode ^
-      date.hashCode ^
-      category.hashCode ^
-      isDone.hashCode;
+        title.hashCode ^
+        desc.hashCode ^
+        date.hashCode ^
+        category.hashCode ^
+        isDone.hashCode ^
+        image.hashCode;
   }
 }
 
+  // Task.fromJson(Map<String, dynamic> json) {
+  //   id = json['\$id'];
+  //   title = json['title'];
+  //   desc = json['desc'];
+  //   date = json['date'];
+  //   category = json['category'];
+  //   isDone = json['isDone'];
+  //   image = json['image'];
+  // }
 
 // // ignore_for_file: public_member_api_docs, sort_constructors_first
 // import 'dart:convert';

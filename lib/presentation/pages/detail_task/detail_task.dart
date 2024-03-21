@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:appwrite_todo/data/model/Category.dart';
 import 'package:appwrite_todo/data/model/Task.dart';
 import 'package:appwrite_todo/main.dart';
 import 'package:appwrite_todo/presentation/pages/list_task/list_task.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:appwrite_todo/presentation/pages/task_date/task_pages.dart';
 import 'package:appwrite_todo/presentation/provider/task_provider.dart';
@@ -40,6 +43,9 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
       initId = widget.task.id;
       isDone = widget.task.isDone;
       kategori = widget.task.category['\$id'];
+      if (widget.task.image != null) {
+        _imageUrl = widget.task.image;
+      }
     }
   }
 
@@ -48,10 +54,22 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
   String? initId;
   Category categoryId = Category();
   bool isDone = false;
+  final ImagePicker _picker = ImagePicker();
+  String? _imageUrl;
+  XFile? _imagePick;
+
+  Future getImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _imagePick = image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Logger().d(initCategory['\$id']);
+    // Logger().d(_imagePick!.path);
+    // Logger().d(_imagePick!.name);
     final isEdit = widget.isEdit;
     return Scaffold(
       appBar: AppBar(
@@ -77,7 +95,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                     desc: descEdt.text,
                     category: kategori ?? initCategory,
                     date: dateInput.text,
-                    isDone: isDone);
+                    isDone: isDone,
+                    image: _imagePick);
 
                 widget.isByDate!
                     ? ref
@@ -91,7 +110,8 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                     title: titleEdt.text,
                     desc: descEdt.text,
                     category: kategori ?? initCategory,
-                    date: dateInput.text);
+                    date: dateInput.text,
+                    image: _imagePick);
                 ref
                     .read(taskNotifierProvider.notifier)
                     .addTask(task, context, kategori);
@@ -291,7 +311,21 @@ class _AddTaskPageState extends ConsumerState<AddTaskPage> {
                         ), //Checkbox
                       ], //<Widget>[]
                     )
-                  : Container()
+                  : Container(),
+              const SizedBox(
+                height: 20.0,
+              ),
+              ElevatedButton(
+                  onPressed: getImage, child: const Text('Upload Image')),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Center(
+                child: _imagePick != null
+                    ? Image.file(File(_imagePick!.path))
+                    : Image.network(_imageUrl!) ??
+                        const Text('No image selected.'),
+              ),
             ])),
       ),
     );

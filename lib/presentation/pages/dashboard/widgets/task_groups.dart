@@ -48,7 +48,6 @@ class TaskGroups extends ConsumerWidget {
               List data = state.data;
 
               return ListView.builder(
-                // physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: data.length,
                 itemBuilder: (context, index) {

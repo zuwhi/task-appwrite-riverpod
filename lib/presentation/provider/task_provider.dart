@@ -39,7 +39,7 @@ class TaskNotifier extends _$TaskNotifier {
   addTask(Task task, context, kategori) async {
     state = const TaskState('loading', '', []);
     String tasks = await appwriteTask.createDocument(task, context);
-    Logger().d(tasks);
+    // Logger().d(tasks);
     ref
         .read(taskCategoryNotifierProvider.notifier)
         .addTaskOnCategory(kategori, tasks);
@@ -75,8 +75,8 @@ class TaskNotifier extends _$TaskNotifier {
     state = const TaskState('loading', '', []);
     final selectCategory = ref.watch(selectCategoryProvider);
     final selectDate = ref.watch(selectDateProvider);
-    Logger().d(selectCategory.category);
-    Logger().d(selectDate.date);
+    // Logger().d(selectCategory.category);
+    // Logger().d(selectDate.date);
     final tasks = await appwriteTask.listDocumentByCategory(
         selectCategory.category, selectDate.date);
     // Logger().d(tasks);

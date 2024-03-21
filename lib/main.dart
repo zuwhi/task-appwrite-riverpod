@@ -1,4 +1,4 @@
-import 'package:appwrite_todo/presentation/pages/detail_task/add_task.dart';
+import 'package:appwrite_todo/presentation/pages/detail_task/detail_task.dart';
 import 'package:appwrite_todo/presentation/pages/dashboard/dashboard_page.dart';
 import 'package:appwrite_todo/presentation/pages/list_task/list_task.dart';
 import 'package:appwrite_todo/presentation/pages/profil/profil_page.dart';

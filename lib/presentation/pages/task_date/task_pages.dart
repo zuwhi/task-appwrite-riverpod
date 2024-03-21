@@ -1,5 +1,5 @@
 import 'package:appwrite_todo/data/model/Task.dart';
-import 'package:appwrite_todo/presentation/pages/detail_task/add_task.dart';
+import 'package:appwrite_todo/presentation/pages/detail_task/detail_task.dart';
 import 'package:appwrite_todo/presentation/provider/task_category_groups.dart';
 import 'package:appwrite_todo/presentation/provider/task_provider.dart';
 import 'package:appwrite_todo/presentation/pages/task_date/widget/CategoryTask.dart';

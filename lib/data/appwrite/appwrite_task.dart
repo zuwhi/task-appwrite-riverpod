@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:appwrite_todo/constants/app_constants.dart';
@@ -81,6 +83,21 @@ class AppwriteTaskRepository {
 
   createDocument(Task task, context) async {
     try {
+      final storage = Storage(_appwriteClient);
+
+      final responseImg = await storage.createFile(
+        bucketId: Appconstants.bucketID,
+        fileId: ID.unique(),
+        file: InputFile.fromPath(
+            path: task.image.path, filename: task.image.name),
+      );
+
+      // logger.d(responseImg.$id);
+      // logger.d(responseImg.bucketId);
+
+      var url =
+          '${Appconstants.endpoint}/storage/buckets/${responseImg.bucketId}/files/${responseImg.$id}/view?project=${Appconstants.projectid}&mode=admin';
+
       final response = await databases.createDocument(
           databaseId: Appconstants.dbID,
           collectionId: Appconstants.collectionID,
@@ -90,9 +107,9 @@ class AppwriteTaskRepository {
             'desc': task.desc,
             'date': task.date,
             'category': task.category,
-            'isDone': task.isDone
+            'isDone': task.isDone,
+            'image': url
           });
-      // logger.d(response.data['\$id']);
       if (response.data.isNotEmpty) {
         return await response.data['\$id'];
       }
